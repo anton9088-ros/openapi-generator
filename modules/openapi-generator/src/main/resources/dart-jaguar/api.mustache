@@ -36,10 +36,10 @@ class {{classname}} extends ApiClient with _${{classname}}Client {
     {{/queryParams}}
     {{#vendorExtensions}}
         {{#formParams}}
-            {{#isJson}}@AsJson() {{/isJson}}{{#isForm}}@AsFormField() {{/isForm}}{{#isMultipart}}@AsMultipartField() {{/isMultipart}}{{{dataType}}} {{paramName}},
+            {{#x-is-json}}@AsJson() {{/x-is-json}}{{#x-is-form}}@AsFormField() {{/x-is-form}}{{#x-is-multipart}}@AsMultipartField() {{/x-is-multipart}}{{{dataType}}} {{paramName}},
         {{/formParams}}
         {{#bodyParam}}
-            {{^isProto}}{{^isJson}}{{^isForm}}{{^isMultipart}}@AsBody(){{/isMultipart}}{{/isForm}}{{/isJson}}{{/isProto}} {{#isProto}}@Serialized(MimeTypes.binary) {{/isProto}}{{#isJson}}@AsJson() {{/isJson}}{{#isForm}}@AsForm() {{/isForm}}{{#isMultipart}}@AsMultipart() {{/isMultipart}}{{{dataType}}} {{paramName}},
+            {{^x-is-proto}}{{^x-is-json}}{{^x-is-form}}{{^x-is-multipart}}@AsBody(){{/x-is-multipart}}{{/x-is-form}}{{/x-is-json}}{{/x-is-proto}} {{#x-is-proto}}@Serialized(MimeTypes.binary) {{/x-is-proto}}{{#x-is-json}}@AsJson() {{/x-is-json}}{{#x-is-form}}@AsForm() {{/x-is-form}}{{#x-is-multipart}}@AsMultipart() {{/x-is-multipart}}{{{dataType}}} {{paramName}},
         {{/bodyParam}}
     {{/vendorExtensions}}
         ) {
