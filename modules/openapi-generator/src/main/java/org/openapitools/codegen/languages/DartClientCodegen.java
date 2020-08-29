@@ -671,7 +671,8 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
             "model-test",
             "model",
             "api-test",
-            "api");
+            "api",
+            "api-doc");
         if (!supportedFileType.contains(fileType)) {
             return;
         }
