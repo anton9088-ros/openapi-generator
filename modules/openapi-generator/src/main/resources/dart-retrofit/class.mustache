@@ -13,12 +13,12 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
 
   {{classname}} copyWith({
     {{#allVars}}
-    {{{dataType}}} {{name}},
+    {{{dataType}}} {{name}} = unchanged,
     {{/allVars}}
   }) {
     return {{classname}}(
       {{#allVars}}
-      {{name}}: {{name}} ?? this.{{name}},
+      {{name}}: {{name}} == unchanged ? this.{{name}} : {{name}},
       {{/allVars}}
     );
   }
@@ -41,7 +41,7 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
       {{/allVars}};
 
   factory {{classname}}.fromJson(Map<String, dynamic> json) => _${{classname}}FromJson(json);
-  
+
   Map<String, dynamic> toJson() => _${{classname}}ToJson(this);
 
   @override
