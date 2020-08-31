@@ -1,10 +1,11 @@
-{{#jsonFormat}}import 'package:jaguar_serializer/jaguar_serializer.dart';{{/jsonFormat}}
+import 'package:json_annotation/json_annotation.dart';
 
 {{#models}}
 {{#model}}
 {{#imports}}
-{{#jsonFormat}}import 'package:{{pubName}}/model/{{.}}.dart';{{/jsonFormat}}
+import 'package:{{pubName}}/model/{{.}}.dart';
 {{/imports}}
+part '{{classFilename}}.g.dart';
 {{#isEnum}}{{>enum}}{{/isEnum}}{{^isEnum}}{{>class}}{{/isEnum}}
 {{/model}}
 {{/models}}

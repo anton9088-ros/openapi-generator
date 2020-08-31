@@ -6,12 +6,6 @@ info:
 components:
   schemas:
 
-    EnumTest:
-      type: string
-      enum:
-        - FORMAT_CAT
-        - FORMAT_DOG
-
     BaseDocument:
       type: object
       properties:

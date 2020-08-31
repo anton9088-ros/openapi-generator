@@ -1,14 +1,6 @@
+@JsonSerializable()
 class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
   {{#vars}}{{#description}} /* {{{description}}} */{{/description}}
-  @Alias('{{{baseName}}}', isNullable:{{#isNullable}} true{{/isNullable}}{{^isNullable}} false{{/isNullable}}{{#allowableValues}}
-          {{^enumVars.empty}}{{^isString}}{{! isString because inline enums are not handled for now }}
-             , processor: const {{{datatypeWithEnum}}}FieldProcessor(),
-          {{/isString}}{{/enumVars.empty}}
-      {{/allowableValues}}
-      {{#isDate}}
-        , processor: const DateFieldProcessor(),
-      {{/isDate}}
-  )
   final {{{datatype}}} {{name}};
 
   {{/vars}}
@@ -21,15 +13,18 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
 
   {{classname}} copyWith({
     {{#allVars}}
-      {{{dataType}}} {{name}},
+    {{{dataType}}} {{name}},
     {{/allVars}}
   }) {
     return {{classname}}(
       {{#allVars}}
-        {{name}}: {{name}} ?? this.{{name}},
+      {{name}}: {{name}} ?? this.{{name}},
       {{/allVars}}
     );
   }
+
+  factory {{classname}}.fromJson(Map<String, dynamic> json) => _${{classname}}FromJson(json);
+  Map<String, dynamic> toJson() => _${{classname}}ToJson(this);
 
   @override
   String toString() {
