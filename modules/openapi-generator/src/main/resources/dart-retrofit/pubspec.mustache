@@ -9,24 +9,16 @@ dependencies:
       url: git://github.com/anton9088-ros/client.git
       path: retrofit
       ref: dio-2
-{{#jsonFormat}}
-  jaguar_serializer: ^2.2.12
-{{/jsonFormat}}
-{{#protoFormat}}
-  jaguar_serializer_protobuf: ^2.2.2
-  jaguar_mimetype: ^1.0.1
-{{/protoFormat}}
+jaguar_serializer: ^2.2.12
 dev_dependencies:
   jaguar_retrofit_gen:
     git:
       url: git://github.com/anton9088-ros/client.git
       path: retrofit_gen
       ref: dio-2
-{{#jsonFormat}}
   jaguar_serializer_cli:
     git:
       url: git://github.com/anton9088-ros/jaguar_serializer.git
       path: serializer_cli
       ref: fixes
-{{/jsonFormat}}
   build_runner: ^1.6.5

@@ -37,7 +37,6 @@ import static org.openapitools.codegen.utils.StringUtils.underscore;
 public class DartRetrofitClientCodegen extends DartClientCodegen {
     private static final Logger LOGGER = LoggerFactory.getLogger(DartRetrofitClientCodegen.class);
     private static final String NULLABLE_FIELDS = "nullableFields";
-    private static final String SERIALIZATION_FORMAT = "serialization";
     private static final String IS_FORMAT_JSON = "jsonFormat";
     private static final String IS_FORMAT_PROTO = "protoFormat";
     private static final String CLIENT_NAME = "clientName";
@@ -54,11 +53,7 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         modelToIgnore.add("list<int>");
     }
 
-    private static final String SERIALIZATION_JSON = "json";
-    private static final String SERIALIZATION_PROTO = "proto";
-
     private boolean nullableFields = true;
-    private String serialization = SERIALIZATION_JSON;
 
     public DartRetrofitClientCodegen() {
         super();
@@ -92,7 +87,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         embeddedTemplateDir = templateDir = "dart-retrofit";
 
         cliOptions.add(new CliOption(NULLABLE_FIELDS, "Is the null fields should be in the JSON payload"));
-        cliOptions.add(new CliOption(SERIALIZATION_FORMAT, "Choose serialization format JSON or PROTO is supported"));
 
         typeMapping.put("file", "List<int>");
         typeMapping.put("binary", "List<int>");
@@ -109,17 +103,13 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         protoTypeMapping.put("number", "double");
         protoTypeMapping.put("float", "float");
         protoTypeMapping.put("double", "double");
-        protoTypeMapping.put("object", "google.protobuf.Any");
         protoTypeMapping.put("integer", "int32");
-        protoTypeMapping.put("Date", "google.protobuf.Timestamp");
-        protoTypeMapping.put("date", "google.protobuf.Timestamp");
         protoTypeMapping.put("File", "bytes");
         protoTypeMapping.put("file", "bytes");
         protoTypeMapping.put("binary", "bytes");
         protoTypeMapping.put("UUID", "string");
         protoTypeMapping.put("URI", "string");
         protoTypeMapping.put("ByteArray", "bytes");
-
     }
 
     @Override
@@ -160,19 +150,8 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
             additionalProperties.put(NULLABLE_FIELDS, nullableFields);
         }
 
-        if (additionalProperties.containsKey(SERIALIZATION_FORMAT)) {
-            serialization = ((String) additionalProperties.get(SERIALIZATION_FORMAT));
-            boolean isProto = serialization.equalsIgnoreCase(SERIALIZATION_PROTO);
-            additionalProperties.put(IS_FORMAT_JSON, serialization.equalsIgnoreCase(SERIALIZATION_JSON));
-            additionalProperties.put(IS_FORMAT_PROTO, isProto);
-
-            modelTemplateFiles.put("model.mustache", isProto ? ".proto" : ".dart");
-
-        } else {
-            //not set, use to be passed to template
-            additionalProperties.put(IS_FORMAT_JSON, true);
-            additionalProperties.put(IS_FORMAT_PROTO, false);
-        }
+        additionalProperties.put(IS_FORMAT_JSON, true);
+        additionalProperties.put(IS_FORMAT_PROTO, false);
 
         if (additionalProperties.containsKey(PUB_NAME)) {
             this.setPubName((String) additionalProperties.get(PUB_NAME));
@@ -279,14 +258,12 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
             op.httpMethod = StringUtils.capitalize(op.httpMethod.toLowerCase(Locale.ROOT));
             boolean isJson = true; //default to JSON
             boolean isForm = false;
-            boolean isProto = false;
             boolean isMultipart = false;
             if (op.consumes != null) {
                 for (Map<String, String> consume : op.consumes) {
                     if (consume.containsKey("mediaType")) {
                         String type = consume.get("mediaType");
                         isJson = type.equalsIgnoreCase("application/json");
-                        isProto = type.equalsIgnoreCase("application/octet-stream");
                         isForm = type.equalsIgnoreCase("application/x-www-form-urlencoded");
                         isMultipart = type.equalsIgnoreCase("multipart/form-data");
                         break;
@@ -315,7 +292,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
 
             op.vendorExtensions.put("x-is-form", isForm);
             op.vendorExtensions.put("x-is-json", isJson);
-            op.vendorExtensions.put("x-is-proto", isProto);
             op.vendorExtensions.put("x-is-multipart", isMultipart);
 
 

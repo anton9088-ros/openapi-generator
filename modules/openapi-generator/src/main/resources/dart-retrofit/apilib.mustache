@@ -2,15 +2,12 @@ library {{pubName}}.api;
 
 import 'package:dio/dio.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
-{{#protoFormat}}
-import 'package:jaguar_serializer_protobuf/proto_repo.dart';
-{{/protoFormat}}
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 
 {{#apiInfo}}{{#apis}}import 'package:{{pubName}}/api/{{classFilename}}.dart';
 {{/apis}}{{/apiInfo}}
-{{#models}}{{#model}}import 'package:{{pubName}}/model/{{classFilename}}{{#protoFormat}}.pb{{/protoFormat}}.dart';
+{{#models}}{{#model}}import 'package:{{pubName}}/model/{{classFilename}}.dart';
 {{/model}}{{/models}}
 
 
@@ -23,20 +20,6 @@ final Map<String, CodecRepo> _defaultConverters = {
     MimeTypes.json: _jsonJaguarRepo,
 };
 {{/jsonFormat}}
-
-{{#protoFormat}}
-final _protoJaguarRepo = ProtoCodecRepo()
-{{#models}}{{#model}}..add((data) => {{classname}}.fromBuffer(List<int>.from(data)))
-{{/model}}{{/models}};
-final _jsonJaguarRepo = ProtoCodecRepo(isJsonFormatEnabled: true)
-{{#models}}{{#model}}..add((data) => {{classname}}.fromBuffer(List<int>.from(data)))
-{{/model}}{{/models}};
-
-final Map<String, CodecRepo> _defaultConverters = {
-    MimeTypes.json: _jsonJaguarRepo,
-    MimeTypes.binary: _protoJaguarRepo,
-};
-{{/protoFormat}}
 
 class {{clientName}} extends DefaultApi {
   Dio _dio;

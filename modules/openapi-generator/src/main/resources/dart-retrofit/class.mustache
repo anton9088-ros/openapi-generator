@@ -1,11 +1,3 @@
-{{#protoFormat}}
-message {{classname}} {
-    {{#vars}}
-    {{#vendorExtensions}}{{{x-proto-type}}} {{name}} = {{x-index}}{{/vendorExtensions}};
-    {{/vars}}
-}
-{{/protoFormat}}
-{{#jsonFormat}}
 {{^discriminator}}
 part '{{classFilename}}.jser.dart';
 {{/discriminator}}
@@ -83,4 +75,3 @@ class {{classname}}Serializer extends Serializer<{{classname}}>{{^discriminator}
   }
   {{/discriminator}}
 }
-{{/jsonFormat}}
