@@ -16,7 +16,6 @@
 
 package org.openapitools.codegen.languages;
 
-import io.swagger.v3.oas.models.OpenAPI;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.meta.features.*;
 import org.openapitools.codegen.utils.ModelUtils;
@@ -192,14 +191,7 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
 
         final String libFolder = sourceFolder + File.separator + "lib";
         supportingFiles.add(new SupportingFile("pubspec.mustache", "", "pubspec.yaml"));
-        supportingFiles.add(new SupportingFile("analysis_options.mustache", "", "analysis_options.yaml"));
-        supportingFiles.add(new SupportingFile("apilib.mustache", libFolder, "api.dart"));
-
         supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
-        supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
-        supportingFiles.add(new SupportingFile("travis.mustache", "", ".travis.yml"));
-        supportingFiles.add(new SupportingFile("date_field_processor.mustache",
-            libFolder + File.separator + "model", "date_field_processor.dart"));
     }
 
     @Override
@@ -225,17 +217,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
                     protoType = protoType + " " + (innerType == null ? p.mostInnerItems.openApiType : innerType);
                 }
                 p.vendorExtensions.put("x-proto-type", protoType == null ? p.openApiType : protoType);
-            }
-
-            if (cm.discriminator != null) {
-                for (CodegenDiscriminator.MappedModel mappedModel : cm.discriminator.getMappedModels()) {
-                    modelImports.add(underscore(mappedModel.getModelName()));
-                }
-            }
-
-            boolean hasDates = cm.allVars.stream().anyMatch(var -> var.isDate);
-            if (hasDates) {
-                modelImports.add(underscore("DateFieldProcessor"));
             }
 
             cm.imports = modelImports;
@@ -326,30 +307,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         objs.put("fullImports", fullImports);
 
         return objs;
-    }
-
-    @Override
-    protected CodegenDiscriminator createDiscriminator(String schemaName, Schema schema, OpenAPI openAPI) {
-        final CodegenDiscriminator discriminator = super.createDiscriminator(schemaName, schema, openAPI);
-
-        if (discriminator != null) {
-            discriminator.getMappedModels().forEach(model -> {
-                final String serializerVariableName = "_"
-                        + String.valueOf(model.getModelName().charAt(0)).toLowerCase()
-                        + model.getModelName().substring(1)
-                        + "Serializer";
-
-                final String serializerClassName = model.getModelName() + "Serializer";
-
-                final CodegenDiscriminator.MappedModel serializer =
-                        new CodegenDiscriminator.MappedModel(serializerVariableName, serializerClassName);
-
-                model.setSerializer(serializer);
-                discriminator.getSerializers().add(serializer);
-            });
-        }
-
-        return discriminator;
     }
 
     @Override
