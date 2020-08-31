@@ -23,7 +23,25 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
     );
   }
 
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+      (other is {{classname}} 
+        {{#allVars}}
+        && (identical(other.{{name}}, {{name}}) || const DeepCollectionEquality().equals(other.{{name}}, {{name}}))
+        {{/allVars}}
+      );
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode
+      {{#allVars}}
+      ^ const DeepCollectionEquality().hash({{name}})
+      {{/allVars}};
+
   factory {{classname}}.fromJson(Map<String, dynamic> json) => _${{classname}}FromJson(json);
+  
   Map<String, dynamic> toJson() => _${{classname}}ToJson(this);
 
   @override
