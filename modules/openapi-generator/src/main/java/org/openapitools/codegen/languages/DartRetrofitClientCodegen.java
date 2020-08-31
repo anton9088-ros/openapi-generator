@@ -58,12 +58,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         super();
 
         modifyFeatureSet(features -> features
-                .includeDocumentationFeatures(DocumentationFeature.Readme)
-                .securityFeatures(EnumSet.of(
-                        SecurityFeature.OAuth2_Implicit,
-                        SecurityFeature.BasicAuth,
-                        SecurityFeature.ApiKey
-                ))
                 .excludeGlobalFeatures(
                         GlobalFeature.XMLStructureDefinitions,
                         GlobalFeature.Callbacks,
