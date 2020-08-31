@@ -5,14 +5,32 @@ info:
 
 components:
   schemas:
+
     EnumTest:
       type: string
       enum:
         - FORMAT_CAT
         - FORMAT_DOG
 
+    BaseDocument:
+      type: object
+      properties:
+        type:
+          description: 'Тип'
+          type: string
+
+    PaymentDocument:
+      type: object
+      allOf:
+          - $ref: 'BaseDocument'
+          - type: object
+            properties:
+              sum:
+                description: 'Сумма'
+                type: int
+
 paths:
-  /createAnimal:
+  /getDocument:
     post:
       responses:
         '200':
@@ -20,4 +38,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'EnumTest'
+                $ref: 'BaseDocument'
