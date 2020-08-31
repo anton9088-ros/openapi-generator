@@ -1,0 +1,86 @@
+{{#protoFormat}}
+message {{classname}} {
+    {{#vars}}
+    {{#vendorExtensions}}{{{x-proto-type}}} {{name}} = {{x-index}}{{/vendorExtensions}};
+    {{/vars}}
+}
+{{/protoFormat}}
+{{#jsonFormat}}
+{{^discriminator}}
+part '{{classFilename}}.jser.dart';
+{{/discriminator}}
+
+class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
+  {{#vars}}{{#description}} /* {{{description}}} */{{/description}}
+  @Alias('{{{baseName}}}', isNullable:{{#isNullable}} true{{/isNullable}}{{^isNullable}} false{{/isNullable}}{{#allowableValues}}
+          {{^enumVars.empty}}{{^isString}}{{! isString because inline enums are not handled for now }}
+             , processor: const {{{datatypeWithEnum}}}FieldProcessor(),
+          {{/isString}}{{/enumVars.empty}}
+      {{/allowableValues}}
+      {{#isDate}}
+        , processor: const DateFieldProcessor(),
+      {{/isDate}}
+  )
+  final {{{datatype}}} {{name}};
+
+  {{/vars}}
+  const {{classname}}({
+    {{#parentModel}}
+    {{#allVars}}{{dataType}} {{name}},{{/allVars}}
+    {{/parentModel}}
+    {{#vars}}this.{{name}},{{/vars}}
+  }){{#parentModel}}: super({{#allVars}}{{name}}: {{name}},{{/allVars}}){{/parentModel}};
+
+  {{classname}} copyWith({
+    {{#allVars}}
+      {{{dataType}}} {{name}},
+    {{/allVars}}
+  }) {
+    return {{classname}}(
+      {{#allVars}}
+        {{name}}: {{name}} ?? this.{{name}},
+      {{/allVars}}
+    );
+  }
+
+  @override
+  String toString() {
+    return '{{classname}}[{{#allVars}}{{name}}=${{name}}, {{/allVars}}]';
+  }
+}
+
+@GenSerializer(nullableFields: {{nullableFields}})
+class {{classname}}Serializer extends Serializer<{{classname}}>{{^discriminator}} with _${{classname}}Serializer{{/discriminator}} {
+  {{#discriminator}}
+  {{#serializers}}
+  final {{mappingName}} = {{modelName}}();
+  {{/serializers}}
+
+  @override
+  {{classname}} fromMap(Map map) {
+    final discriminator = map['{{propertyName}}'];
+    switch(discriminator) {
+      {{#mappedModels}}
+      case '{{mappingName}}':
+        return {{#serializer}}{{mappingName}}{{/serializer}}.fromMap(map);
+      {{/mappedModels}}
+      default:
+        throw Exception('Invalid discriminator type: $discriminator');
+    }
+  }
+
+  @override
+  Map<String, dynamic> toMap({{classname}} model) {
+    final discriminator = model.{{propertyName}}.value;
+    switch(discriminator) {
+      {{#mappedModels}}
+      case '{{mappingName}}':
+        return {{#serializer}}{{mappingName}}{{/serializer}}.toMap(model);
+      {{/mappedModels}}
+      default:
+        throw Exception('Invalid discriminator type: $discriminator');
+    }
+  }
+  {{/discriminator}}
+}
+{{/jsonFormat}}

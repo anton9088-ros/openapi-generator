@@ -1,0 +1,7 @@
+generatorName: dart-retrofit
+outputDir: samples/client/petstore/dart-retrofit/openapi
+inputSpec: modules/openapi-generator/src/test/resources/3_0/petstore_simple.yaml
+templateDir: modules/openapi-generator/src/main/resources/dart-retrofit
+additionalProperties:
+  hideGenerationTimestamp: "true"
+  pubName: openapi
