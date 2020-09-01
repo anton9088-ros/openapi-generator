@@ -551,113 +551,117 @@ public class DefaultGenerator implements Generator {
             }
             paths = updatedPaths;
         }
-        for (String tag : paths.keySet()) {
-            try {
-                List<CodegenOperation> ops = paths.get(tag);
-                ops.sort((one, another) -> ObjectUtils.compare(one.operationId, another.operationId));
-                Map<String, Object> operation = processOperations(config, tag, ops, allModels);
-                URL url = URLPathUtils.getServerURL(openAPI, config.serverVariableOverrides());
-                operation.put("basePath", basePath);
-                operation.put("basePathWithoutHost", config.encodePath(url.getPath()).replaceAll("/$", ""));
-                operation.put("contextPath", contextPath);
-                operation.put("baseName", tag);
-                operation.put("apiPackage", config.apiPackage());
-                operation.put("modelPackage", config.modelPackage());
-                operation.putAll(config.additionalProperties());
-                operation.put("classname", config.toApiName(tag));
-                operation.put("classVarName", config.toApiVarName(tag));
-                operation.put("importPath", config.toApiImport(tag));
-                operation.put("classFilename", config.toApiFilename(tag));
-                operation.put("strictSpecBehavior", config.isStrictSpecBehavior());
+        final String tag = "";
+        try {
+            List<CodegenOperation> ops = paths
+                .values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+                
+            ops.sort((one, another) -> ObjectUtils.compare(one.operationId, another.operationId));
+            Map<String, Object> operation = processOperations(config, tag, ops, allModels);
+            URL url = URLPathUtils.getServerURL(openAPI, config.serverVariableOverrides());
+            operation.put("basePath", basePath);
+            operation.put("basePathWithoutHost", config.encodePath(url.getPath()).replaceAll("/$", ""));
+            operation.put("contextPath", contextPath);
+            operation.put("baseName", tag);
+            operation.put("apiPackage", config.apiPackage());
+            operation.put("modelPackage", config.modelPackage());
+            operation.putAll(config.additionalProperties());
+            operation.put("classname", config.toApiName(tag));
+            operation.put("classVarName", config.toApiVarName(tag));
+            operation.put("importPath", config.toApiImport(tag));
+            operation.put("classFilename", config.toApiFilename(tag));
+            operation.put("strictSpecBehavior", config.isStrictSpecBehavior());
 
-                if (allModels == null || allModels.isEmpty()) {
-                    operation.put("hasModel", false);
-                } else {
-                    operation.put("hasModel", true);
-                }
-
-                if (!config.vendorExtensions().isEmpty()) {
-                    operation.put("vendorExtensions", config.vendorExtensions());
-                }
-
-                // process top-level x-group-parameters
-                if (config.vendorExtensions().containsKey("x-group-parameters")) {
-                    boolean isGroupParameters = Boolean.parseBoolean(config.vendorExtensions().get("x-group-parameters").toString());
-
-                    Map<String, Object> objectMap = (Map<String, Object>) operation.get("operations");
-                    @SuppressWarnings("unchecked")
-                    List<CodegenOperation> operations = (List<CodegenOperation>) objectMap.get("operation");
-                    for (CodegenOperation op : operations) {
-                        if (isGroupParameters && !op.vendorExtensions.containsKey("x-group-parameters")) {
-                            op.vendorExtensions.put("x-group-parameters", Boolean.TRUE);
-                        }
-                    }
-                }
-
-                // Pass sortParamsByRequiredFlag through to the Mustache template...
-                boolean sortParamsByRequiredFlag = true;
-                if (this.config.additionalProperties().containsKey(CodegenConstants.SORT_PARAMS_BY_REQUIRED_FLAG)) {
-                    sortParamsByRequiredFlag = Boolean.parseBoolean(this.config.additionalProperties().get(CodegenConstants.SORT_PARAMS_BY_REQUIRED_FLAG).toString());
-                }
-                operation.put("sortParamsByRequiredFlag", sortParamsByRequiredFlag);
-
-                /* consumes, produces are no longer defined in OAS3.0
-                processMimeTypes(swagger.getConsumes(), operation, "consumes");
-                processMimeTypes(swagger.getProduces(), operation, "produces");
-                */
-
-                allOperations.add(new HashMap<>(operation));
-                for (int i = 0; i < allOperations.size(); i++) {
-                    Map<String, Object> oo = (Map<String, Object>) allOperations.get(i);
-                    if (i < (allOperations.size() - 1)) {
-                        oo.put("hasMore", "true");
-                    }
-                }
-
-                for (String templateName : config.apiTemplateFiles().keySet()) {
-                    String filename = config.apiFilename(templateName, tag);
-                    File written = processTemplateToFile(operation, templateName, filename, generateApis, CodegenConstants.APIS);
-                    if (written != null) {
-                        files.add(written);
-                        if (config.isEnablePostProcessFile() && !dryRun) {
-                            config.postProcessFile(written, "api");
-                        }
-                    }
-                }
-
-                // to generate api test files
-                for (String templateName : config.apiTestTemplateFiles().keySet()) {
-                    String filename = config.apiTestFilename(templateName, tag);
-                    File apiTestFile = new File(filename);
-                    // do not overwrite test file that already exists
-                    if (apiTestFile.exists()) {
-                        this.templateProcessor.skip(apiTestFile.toPath(), "Test files never overwrite an existing file of the same name.");
-                    } else {
-                        File written = processTemplateToFile(operation, templateName, filename, generateApiTests, CodegenConstants.API_TESTS);
-                        if (written != null) {
-                            files.add(written);
-                            if (config.isEnablePostProcessFile() && !dryRun) {
-                                config.postProcessFile(written, "api-test");
-                            }
-                        }
-                    }
-                }
-
-                // to generate api documentation files
-                for (String templateName : config.apiDocTemplateFiles().keySet()) {
-                    String filename = config.apiDocFilename(templateName, tag);
-                    File written = processTemplateToFile(operation, templateName, filename, generateApiDocumentation, CodegenConstants.API_DOCS);
-                    if (written != null) {
-                        files.add(written);
-                        if (config.isEnablePostProcessFile() && !dryRun) {
-                            config.postProcessFile(written, "api-doc");
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                throw new RuntimeException("Could not generate api file for '" + tag + "'", e);
+            if (allModels == null || allModels.isEmpty()) {
+                operation.put("hasModel", false);
+            } else {
+                operation.put("hasModel", true);
             }
+
+            if (!config.vendorExtensions().isEmpty()) {
+                operation.put("vendorExtensions", config.vendorExtensions());
+            }
+
+            // process top-level x-group-parameters
+            if (config.vendorExtensions().containsKey("x-group-parameters")) {
+                boolean isGroupParameters = Boolean.parseBoolean(config.vendorExtensions().get("x-group-parameters").toString());
+
+                Map<String, Object> objectMap = (Map<String, Object>) operation.get("operations");
+                @SuppressWarnings("unchecked")
+                List<CodegenOperation> operations = (List<CodegenOperation>) objectMap.get("operation");
+                for (CodegenOperation op : operations) {
+                    if (isGroupParameters && !op.vendorExtensions.containsKey("x-group-parameters")) {
+                        op.vendorExtensions.put("x-group-parameters", Boolean.TRUE);
+                    }
+                }
+            }
+
+            // Pass sortParamsByRequiredFlag through to the Mustache template...
+            boolean sortParamsByRequiredFlag = true;
+            if (this.config.additionalProperties().containsKey(CodegenConstants.SORT_PARAMS_BY_REQUIRED_FLAG)) {
+                sortParamsByRequiredFlag = Boolean.parseBoolean(this.config.additionalProperties().get(CodegenConstants.SORT_PARAMS_BY_REQUIRED_FLAG).toString());
+            }
+            operation.put("sortParamsByRequiredFlag", sortParamsByRequiredFlag);
+
+            /* consumes, produces are no longer defined in OAS3.0
+            processMimeTypes(swagger.getConsumes(), operation, "consumes");
+            processMimeTypes(swagger.getProduces(), operation, "produces");
+            */
+
+            allOperations.add(new HashMap<>(operation));
+            for (int i = 0; i < allOperations.size(); i++) {
+                Map<String, Object> oo = (Map<String, Object>) allOperations.get(i);
+                if (i < (allOperations.size() - 1)) {
+                    oo.put("hasMore", "true");
+                }
+            }
+
+            for (String templateName : config.apiTemplateFiles().keySet()) {
+                String filename = config.apiFilename(templateName, tag).replace("default_", "");
+                File written = processTemplateToFile(operation, templateName, filename, generateApis, CodegenConstants.APIS);
+                if (written != null) {
+                    files.add(written);
+                    if (config.isEnablePostProcessFile() && !dryRun) {
+                        config.postProcessFile(written, "api");
+                    }
+                }
+            }
+
+            // to generate api test files
+            for (String templateName : config.apiTestTemplateFiles().keySet()) {
+                String filename = config.apiTestFilename(templateName, tag);
+                File apiTestFile = new File(filename);
+                // do not overwrite test file that already exists
+                if (apiTestFile.exists()) {
+                    this.templateProcessor.skip(apiTestFile.toPath(), "Test files never overwrite an existing file of the same name.");
+                } else {
+                    File written = processTemplateToFile(operation, templateName, filename, generateApiTests, CodegenConstants.API_TESTS);
+                    if (written != null) {
+                        files.add(written);
+                        if (config.isEnablePostProcessFile() && !dryRun) {
+                            config.postProcessFile(written, "api-test");
+                        }
+                    }
+                }
+            }
+
+            // to generate api documentation files
+            for (String templateName : config.apiDocTemplateFiles().keySet()) {
+                String filename = config.apiDocFilename(templateName, tag);
+                File written = processTemplateToFile(operation, templateName, filename, generateApiDocumentation, CodegenConstants.API_DOCS);
+                if (written != null) {
+                    files.add(written);
+                    if (config.isEnablePostProcessFile() && !dryRun) {
+                        config.postProcessFile(written, "api-doc");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not generate api file for '" + tag + "'", e);
         }
         if (GlobalSettings.getProperty("debugOperations") != null) {
             LOGGER.info("############ Operation info ############");

@@ -1,8 +1,7 @@
-import 'package:jaguar_retrofit/annotations/annotations.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 import 'dart:async';
+
+import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 
 {{#operations}}
 {{#modelImports}}import 'package:{{pubName}}/model/{{.}}.dart';
@@ -10,60 +9,24 @@ import 'dart:async';
 {{#fullImports}}import '{{.}}';
 {{/fullImports}}
 
-part '{{classFilename}}.jretro.dart';
+part 'api.g.dart';
 
-@GenApiClient()
-class {{classname}} extends ApiClient with _${{classname}}Client {
-    Route base;
-    final Map<String, CodecRepo> converters;
-
-    {{classname}}(this.converters);
+@RestApi()
+abstract class {{clientName}} {
+    factory {{clientName}}(Dio dio, {String baseUrl}) = _{{clientName}};
 
     {{#operation}}
     /// {{{summary}}}
-    ///
-{{{notes}}}
-    @{{httpMethod}}Req(path: "{{path}}"{{#hasAuthMethods}}, metadata: {"auth": [{{#authMethods}} {"type": "{{type}}", "name": "{{name}}"{{#isApiKey}}, "keyName": "{{keyParamName}}", "where": "{{#isKeyInQuery}}query{{/isKeyInQuery}}{{#isKeyInHeader}}header{{/isKeyInHeader}}"{{/isApiKey}} }{{#hasMore}}, {{/hasMore}}{{/authMethods}}]}{{/hasAuthMethods}})
-    Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}StringResponse{{/returnType}}> {{nickname}}(
-    {{#pathParams}}
-        @PathParam("{{baseName}}") {{dataType}} {{paramName}},
-    {{/pathParams}}
-    {{#headerParams}}
-        @Header("{{baseName}}") {{{dataType}}} {{paramName}},
-    {{/headerParams}}
+    @{{httpMethod}}("{{path}}")
+    Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {{nickname}}(
     {{#queryParams}}
-        @QueryParam("{{baseName}}") {{{dataType}}} {{paramName},
+        @Query("{{baseName}}") {{{dataType}}} {{paramName}},
     {{/queryParams}}
-    {{#vendorExtensions}}
-        {{#formParams}}
-            {{#x-is-json}}@AsJson() {{/x-is-json}}{{#x-is-form}}@AsFormField() {{/x-is-form}}{{#x-is-multipart}}@AsMultipartField() {{/x-is-multipart}}{{{dataType}}} {{paramName}},
-        {{/formParams}}
-        {{#bodyParam}}
-            {{#x-is-json}}@AsJson() {{/x-is-json}}{{#x-is-form}}@AsForm() {{/x-is-form}}{{#x-is-multipart}}@AsMultipart() {{/x-is-multipart}}{{{dataType}}} {{paramName}},
-        {{/bodyParam}}
-    {{/vendorExtensions}}
-        ) {
-        return super.{{nickname}}(
-    {{#pathParams}}
-        {{paramName}},
-    {{/pathParams}}
-    {{#headerParams}}
-        {{paramName}},
-    {{/headerParams}}
-    {{#queryParams}}
-        {{paramName}},
-    {{/queryParams}}
-
-    {{#formParams}}
-        {{paramName}},
-    {{/formParams}}
     {{#bodyParam}}
-        {{paramName}},
+        @Body() {{{dataType}}} {{paramName}},
     {{/bodyParam}}
-        );
-    }
+    );
 
   {{/operation}}
-
 }
 {{/operations}}

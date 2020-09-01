@@ -231,7 +231,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         Set<String> modelImports = new HashSet<>();
         Set<String> fullImports = new HashSet<>();
         for (CodegenOperation op : operationList) {
-            op.httpMethod = StringUtils.capitalize(op.httpMethod.toLowerCase(Locale.ROOT));
             boolean isJson = true; //default to JSON
             boolean isForm = false;
             boolean isMultipart = false;
