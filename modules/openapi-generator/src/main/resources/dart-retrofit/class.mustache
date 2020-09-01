@@ -1,6 +1,7 @@
 @JsonSerializable()
 class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
   {{#vars}}{{#title}} /* {{{title}}} */{{/title}}
+  @JsonKey(name: '{{{baseName}}}')
   final {{{datatype}}} {{name}};
 
   {{/vars}}
