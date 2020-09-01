@@ -492,15 +492,16 @@ public class InlineModelResolver {
      * @return if provided the sanitized {@code title}, else the sanitized {@code key}
      */
     private String resolveModelName(String title, String key) {
-        if (title == null) {
-            if (key == null) {
-                LOGGER.warn("Found an inline schema without the `title` attribute. Default the model name to InlineObject instead. To have better control of the model naming, define the model separately so that it can be reused throughout the spec.");
-                return uniqueName("InlineObject");
-            }
-            return uniqueName(sanitizeName(key));
-        } else {
-            return uniqueName(sanitizeName(title));
-        }
+        return uniqueName(sanitizeName(key));
+        // if (title == null) {
+        //     if (key == null) {
+        //         LOGGER.warn("Found an inline schema without the `title` attribute. Default the model name to InlineObject instead. To have better control of the model naming, define the model separately so that it can be reused throughout the spec.");
+        //         return uniqueName("InlineObject");
+        //     }
+        //     return uniqueName(sanitizeName(key));
+        // } else {
+        //     return uniqueName(sanitizeName(title));
+        // }
     }
 
     private String matchGenerated(Schema model) {
