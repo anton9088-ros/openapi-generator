@@ -13,21 +13,20 @@ part 'api.g.dart';
 
 @RestApi()
 abstract class {{clientName}} {
-    factory {{clientName}}(Dio dio, {String baseUrl}) = _{{clientName}};
+  factory {{clientName}}(Dio dio, {String baseUrl}) = _{{clientName}};
 
-    {{#operation}}
-    /// {{{summary}}}
+  {{#operation}}
+    {{{summary}}}
     @{{httpMethod}}("{{path}}")
     Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {{nickname}}(
     {{#queryParams}}
-        {{#description}} /// {{{description}}} {{/description}}
-        @Query("{{baseName}}") {{{dataType}}} {{paramName}},
+      {{{description}}}
+      @Query("{{baseName}}") {{{dataType}}} {{paramName}},
     {{/queryParams}}
     {{#bodyParam}}
-        @Body() {{{dataType}}} {{paramName}},
+      @Body() {{{dataType}}} {{paramName}},
     {{/bodyParam}}
     );
-
   {{/operation}}
 }
 {{/operations}}

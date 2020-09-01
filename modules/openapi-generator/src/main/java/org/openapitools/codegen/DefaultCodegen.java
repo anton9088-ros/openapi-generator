@@ -3317,16 +3317,14 @@ public class DefaultCodegen implements CodegenConfig {
     private static String multilineDescription(String description) {
         if (description == null) return null;
 
-        description = description
-            .replace("<br><br>", "\n")
-            .replace("\n", "\n    ")
-            .trim();
-
-        if (description.contains("\n")) {
-            description = "\n    " + description + "\n ";
-        }
-
-        return description;
+        return Arrays.stream(
+            description
+                .trim()
+                .replace("<br><br>", "\n")
+                .split("\n")
+        )
+            .map((line) -> "/// " + line)
+            .collect(Collectors.joining("\n"));
     }
 
     /**
@@ -3657,9 +3655,9 @@ public class DefaultCodegen implements CodegenConfig {
         }
 
         op.operationId = toOperationId(operationId);
-        op.summary = operation.getSummary();
+        op.summary = multilineDescription(operation.getSummary());
         op.unescapedNotes = operation.getDescription();
-        op.notes = operation.getDescription();
+        op.notes = multilineDescription(operation.getDescription());
 
         String notes = op.notes;
         if (notes != null) {
@@ -4167,7 +4165,7 @@ public class DefaultCodegen implements CodegenConfig {
         }
 
         codegenParameter.baseName = parameter.getName();
-        codegenParameter.description = escapeText(parameter.getDescription());
+        codegenParameter.description = multilineDescription(parameter.getDescription());
         codegenParameter.unescapedDescription = parameter.getDescription();
         if (parameter.getRequired() != null) {
             codegenParameter.required = parameter.getRequired();

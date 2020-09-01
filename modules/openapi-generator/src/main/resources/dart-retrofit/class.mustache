@@ -1,20 +1,21 @@
 @JsonSerializable()
 class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
-  {{#vars}}{{#title}} /* {{{title}}} */{{/title}}
-  @JsonKey(name: '{{{baseName}}}')
-  final {{{datatype}}} {{name}};
-
+  {{#vars}}
+    {{{title}}}
+    @JsonKey(name: '{{{baseName}}}')
+    final {{{datatype}}} {{name}};
   {{/vars}}
+
   const {{classname}}({
     {{#parentModel}}
-    {{#allVars}}{{dataType}} {{name}},{{/allVars}}
+      {{#allVars}}{{dataType}} {{name}},{{/allVars}}
     {{/parentModel}}
     {{#vars}}this.{{name}},{{/vars}}
   }){{#parentModel}}: super({{#allVars}}{{name}}: {{name}},{{/allVars}}){{/parentModel}};
 
   {{classname}} copyWith({
     {{#allVars}}
-    {{{dataType}}} {{name}} = unchanged,
+      {{{dataType}}} {{name}} = unchanged,
     {{/allVars}}
   }) {
     return {{classname}}(
@@ -29,7 +30,7 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
     return identical(this, other) ||
       (other is {{classname}} 
         {{#allVars}}
-        && (identical(other.{{name}}, {{name}}) || const DeepCollectionEquality().equals(other.{{name}}, {{name}}))
+          && (identical(other.{{name}}, {{name}}) || const DeepCollectionEquality().equals(other.{{name}}, {{name}}))
         {{/allVars}}
       );
   }
@@ -38,7 +39,7 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
   int get hashCode =>
       runtimeType.hashCode
       {{#allVars}}
-      ^ const DeepCollectionEquality().hash({{name}})
+        ^ const DeepCollectionEquality().hash({{name}})
       {{/allVars}};
 
   factory {{classname}}.fromJson(Map<String, dynamic> json) => _${{classname}}FromJson(json);

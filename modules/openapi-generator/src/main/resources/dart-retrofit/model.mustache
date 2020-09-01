@@ -3,11 +3,11 @@ import 'package:collection/collection.dart';
 import 'package:{{pubName}}/common.dart';
 
 {{#models}}
-{{#model}}
-{{#imports}}
-import 'package:{{pubName}}/model/{{.}}.dart';
-{{/imports}}
-part '{{classFilename}}.g.dart';
-{{#isEnum}}{{>enum}}{{/isEnum}}{{^isEnum}}{{>class}}{{/isEnum}}
-{{/model}}
+  {{#model}}
+    {{#imports}}
+      import 'package:{{pubName}}/model/{{.}}.dart';
+    {{/imports}}
+    part '{{classFilename}}.g.dart';
+    {{#isEnum}}{{>enum}}{{/isEnum}}{{^isEnum}}{{>class}}{{/isEnum}}
+  {{/model}}
 {{/models}}
