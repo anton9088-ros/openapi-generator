@@ -2233,8 +2233,8 @@ public class DefaultCodegen implements CodegenConfig {
         } else {
             m.name = name;
         }
-        m.title = escapeText(schema.getTitle());
-        m.description = escapeText(schema.getDescription());
+        m.title = multilineDescription(schema.getTitle());
+        m.description = multilineDescription(schema.getDescription());
         m.unescapedDescription = schema.getDescription();
         m.classname = toModelName(name);
         m.classVarName = toVarName(name);
@@ -3010,23 +3010,9 @@ public class DefaultCodegen implements CodegenConfig {
         }
         property.nameInCamelCase = camelize(property.name, false);
         property.nameInSnakeCase = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, property.nameInCamelCase);
-        property.description = p.getDescription();
-
-        String description = property.description;
-        if (description != null) {
-            description = description
-                .replace("<br><br>", "\n")
-                .replace("\n", "\n    ")
-                .trim();
-
-            if (description.contains("\n")) {
-                description = "\n    " + description + "\n ";
-            }
-            property.description = description;
-        }
-
+        property.description = multilineDescription(p.getDescription());
         property.unescapedDescription = p.getDescription();
-        property.title = p.getTitle();
+        property.title = multilineDescription(p.getTitle());
         property.getter = toGetter(name);
         property.setter = toSetter(name);
         property.example = toExampleValue(p);
@@ -3326,6 +3312,21 @@ public class DefaultCodegen implements CodegenConfig {
 
         LOGGER.debug("debugging from property return: " + property);
         return property;
+    }
+
+    private static String multilineDescription(String description) {
+        if (description == null) return null;
+
+        description = description
+            .replace("<br><br>", "\n")
+            .replace("\n", "\n    ")
+            .trim();
+
+        if (description.contains("\n")) {
+            description = "\n    " + description + "\n ";
+        }
+
+        return description;
     }
 
     /**

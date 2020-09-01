@@ -20,6 +20,7 @@ abstract class {{clientName}} {
     @{{httpMethod}}("{{path}}")
     Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {{nickname}}(
     {{#queryParams}}
+        {{#description}} /// {{{description}}} {{/description}}
         @Query("{{baseName}}") {{{dataType}}} {{paramName}},
     {{/queryParams}}
     {{#bodyParam}}
