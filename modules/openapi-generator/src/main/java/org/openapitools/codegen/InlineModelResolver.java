@@ -434,18 +434,13 @@ public class InlineModelResolver {
                 flattenComposedChildren(openAPI, modelName + "_allOf", m.getAllOf());
                 flattenComposedChildren(openAPI, modelName + "_anyOf", m.getAnyOf());
                 flattenComposedChildren(openAPI, modelName + "_oneOf", m.getOneOf());
-            } else if (model instanceof Schema) {
-                Schema m = (Schema) model;
-                Map<String, Schema> properties = m.getProperties();
-                flattenProperties(openAPI, properties, modelName);
-                fixStringModel(m);
             } else if (ModelUtils.isArraySchema(model)) {
                 ArraySchema m = (ArraySchema) model;
                 Schema inner = m.getItems();
                 if (inner instanceof ObjectSchema) {
                     ObjectSchema op = (ObjectSchema) inner;
                     if (op.getProperties() != null && op.getProperties().size() > 0) {
-                        String innerModelName = resolveModelName(op.getTitle(), modelName + "_inner");
+                        String innerModelName = resolveModelName(op.getTitle(), modelName + "_item");
                         Schema innerModel = modelFromProperty(openAPI, op, innerModelName);
                         String existing = matchGenerated(innerModel);
                         if (existing == null) {
@@ -461,6 +456,11 @@ public class InlineModelResolver {
                         }
                     }
                 }
+            } else if (model instanceof Schema) {
+                Schema m = (Schema) model;
+                Map<String, Schema> properties = m.getProperties();
+                flattenProperties(openAPI, properties, modelName);
+                fixStringModel(m);
             }
         }
     }
