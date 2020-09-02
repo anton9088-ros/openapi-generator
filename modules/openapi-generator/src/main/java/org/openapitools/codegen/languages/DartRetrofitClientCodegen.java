@@ -235,6 +235,12 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
                 op.returnType = null;
             }
 
+            for (CodegenParameter param : op.queryParams) {
+                if (param.dataType.equals("DateTime")) {
+                    param.dataType = "String";
+                }
+            }
+
             boolean isJson = true; //default to JSON
             boolean isForm = false;
             boolean isMultipart = false;
