@@ -186,7 +186,6 @@ public class DartRetrofitClientCodegen extends DartClientCodegen {
         final String libFolder = sourceFolder + File.separator + "lib";
         supportingFiles.add(new SupportingFile("pubspec.mustache", "", "pubspec.yaml"));
         supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
-        supportingFiles.add(new SupportingFile("common.mustache", libFolder, "common.dart"));
     }
 
     @Override
