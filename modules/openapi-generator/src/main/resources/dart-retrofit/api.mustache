@@ -18,11 +18,21 @@ abstract class {{clientName}} {
   {{#operation}}
     {{{summary}}}
     @{{httpMethod}}("{{path}}")
+    {{#hasFormParams}}
+      @FormUrlEncoded()
+    {{/hasFormParams}}
     Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {{nickname}}(
+    {{#headerParams}}
+      @Header("{{baseName}}") {{{dataType}}} {{paramName}},
+    {{/headerParams}}
     {{#queryParams}}
       {{{description}}}
       @Query("{{baseName}}") {{{dataType}}} {{paramName}},
     {{/queryParams}}
+    {{#formParams}}
+      {{{description}}}
+      @Field("{{baseName}}") {{{dataType}}} {{paramName}},
+    {{/formParams}}
     {{#bodyParam}}
       @Body() {{{dataType}}} {{paramName}},
     {{/bodyParam}}
