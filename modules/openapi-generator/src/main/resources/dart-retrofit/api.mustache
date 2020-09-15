@@ -22,20 +22,18 @@ abstract class {{clientName}} {
       @FormUrlEncoded()
     {{/hasFormParams}}
     Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> {{nickname}}(
-    {{#headerParams}}
-      @Header("{{baseName}}") {{{dataType}}} {{paramName}},
-    {{/headerParams}}
-    {{#queryParams}}
+    {{#requiredParams}}
       {{{description}}}
-      @Query("{{baseName}}") {{{dataType}}} {{paramName}},
-    {{/queryParams}}
-    {{#formParams}}
-      {{{description}}}
-      @Field("{{baseName}}") {{{dataType}}} {{paramName}},
-    {{/formParams}}
-    {{#bodyParam}}
-      @Body() {{{dataType}}} {{paramName}},
-    {{/bodyParam}}
+      {{#isHeaderParam}}@Header("{{baseName}}") {{{dataType}}} {{paramName}},{{/isHeaderParam}}{{#isQueryParam}}@Query("{{baseName}}") {{{dataType}}} {{paramName}},{{/isQueryParam}}{{#isFormParam}}@Field("{{baseName}}") {{{dataType}}} {{paramName}},{{/isFormParam}}{{#isBodyParam}}@Body() {{{dataType}}} {{paramName}},{{/isBodyParam}}
+    {{/requiredParams}}
+    {{#hasOptionalParams}}
+      [
+        {{#optionalParams}}
+          {{{description}}}
+          {{#isHeaderParam}}@Header("{{baseName}}") {{{dataType}}} {{paramName}},{{/isHeaderParam}}{{#isQueryParam}}@Query("{{baseName}}") {{{dataType}}} {{paramName}},{{/isQueryParam}}{{#isFormParam}}@Field("{{baseName}}") {{{dataType}}} {{paramName}},{{/isFormParam}}{{#isBodyParam}}@Body() {{{dataType}}} {{paramName}},{{/isBodyParam}}
+        {{/optionalParams}}
+      ]
+    {{/hasOptionalParams}}
     );
   {{/operation}}
 }

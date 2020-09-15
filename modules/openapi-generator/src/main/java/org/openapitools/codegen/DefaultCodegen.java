@@ -3770,7 +3770,7 @@ public class DefaultCodegen implements CodegenConfig {
                     bodyParameterName = (String) op.vendorExtensions.get("x-codegen-request-body-name");
                 }
                 bodyParam = fromRequestBody(requestBody, imports, bodyParameterName);
-                bodyParam.description = escapeText(requestBody.getDescription());
+                bodyParam.description = multilineDescription(requestBody.getDescription());
                 postProcessParameter(bodyParam);
 
                 bodyParams.add(bodyParam);
