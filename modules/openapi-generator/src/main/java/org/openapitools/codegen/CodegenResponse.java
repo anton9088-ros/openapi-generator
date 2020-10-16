@@ -45,6 +45,7 @@ public class CodegenResponse implements IJsonSchemaValidationProperties {
     public boolean isBoolean;
     public boolean isDate;
     public boolean isDateTime;
+    public boolean isDateArray;
     public boolean isUuid;
     public boolean isEmail;
     public boolean isModel;
@@ -78,7 +79,7 @@ public class CodegenResponse implements IJsonSchemaValidationProperties {
     public int hashCode() {
         return Objects.hash(headers, code, message, hasMore, examples, dataType, baseType, containerType, hasHeaders,
                 isString, isNumeric, isInteger, isLong, isNumber, isFloat, isDouble, isByteArray, isBoolean, isDate,
-                isDateTime, isUuid, isEmail, isModel, isFreeFormObject, isAnyType, isDefault, simpleType, primitiveType,
+                isDateTime, isDateArray, isUuid, isEmail, isModel, isFreeFormObject, isAnyType, isDefault, simpleType, primitiveType,
                 isMapContainer, isListContainer, isBinary, isFile, schema, jsonSchema, vendorExtensions,
                 getMaxProperties(), getMinProperties(), uniqueItems, getMaxItems(), getMinItems(), getMaxLength(),
                 getMinLength(), exclusiveMinimum, exclusiveMaximum, getMinimum(), getMaximum(), getPattern());
@@ -102,6 +103,7 @@ public class CodegenResponse implements IJsonSchemaValidationProperties {
                 isBoolean == that.isBoolean &&
                 isDate == that.isDate &&
                 isDateTime == that.isDateTime &&
+                isDateArray == that.isDateArray &&
                 isUuid == that.isUuid &&
                 isEmail == that.isEmail &&
                 isModel == that.isModel &&
@@ -293,6 +295,7 @@ public class CodegenResponse implements IJsonSchemaValidationProperties {
         sb.append(", isBoolean=").append(isBoolean);
         sb.append(", isDate=").append(isDate);
         sb.append(", isDateTime=").append(isDateTime);
+        sb.append(", isDateArray=").append(isDateArray);
         sb.append(", isUuid=").append(isUuid);
         sb.append(", isEmail=").append(isEmail);
         sb.append(", isModel=").append(isModel);

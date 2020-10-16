@@ -3187,6 +3187,10 @@ public class DefaultCodegen implements CodegenConfig {
             // default to string if inner item is undefined
             ArraySchema arraySchema = (ArraySchema) p;
             Schema innerSchema = unaliasSchema(getSchemaItems(arraySchema), importMapping);
+
+            if (ModelUtils.isDateSchema(innerSchema)) {
+                property.isDateArray = true;
+            }
         } else if (ModelUtils.isMapSchema(p)) {
             Schema innerSchema = unaliasSchema(getAdditionalProperties(p), importMapping);
             if (innerSchema == null) {
@@ -4037,6 +4041,8 @@ public class DefaultCodegen implements CodegenConfig {
                 r.isDate = true;
             } else if (Boolean.TRUE.equals(cp.isDateTime)) {
                 r.isDateTime = true;
+            } else if (Boolean.TRUE.equals(cp.isDateArray)) {
+                r.isDateArray = true;
             } else if (Boolean.TRUE.equals(cp.isFreeFormObject)) {
                 r.isFreeFormObject = true;
             } else if (Boolean.TRUE.equals(cp.isAnyType)) {

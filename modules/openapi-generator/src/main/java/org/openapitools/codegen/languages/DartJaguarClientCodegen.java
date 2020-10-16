@@ -254,7 +254,7 @@ public class DartJaguarClientCodegen extends DartClientCodegen {
                 }
             }
 
-            boolean hasDates = cm.allVars.stream().anyMatch(var -> var.isDate);
+            boolean hasDates = cm.allVars.stream().anyMatch(var -> var.isDate || var.isDateArray);
             if (hasDates) {
                 modelImports.add(underscore("DateFieldProcessor"));
             }

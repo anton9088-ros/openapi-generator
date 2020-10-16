@@ -20,6 +20,9 @@ class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
       {{#isDate}}
         , processor: const DateFieldProcessor(),
       {{/isDate}}
+      {{#isDateArray}}
+        , processor: const DateFieldProcessor(),
+      {{/isDateArray}}
   )
   final {{{datatype}}} {{name}};
 

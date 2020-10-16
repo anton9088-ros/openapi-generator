@@ -130,6 +130,7 @@ public class CodegenProperty implements Cloneable, IJsonSchemaValidationProperti
     public boolean isBoolean;
     public boolean isDate; // full-date notation as defined by RFC 3339, section 5.6, for example, 2017-07-21
     public boolean isDateTime; // the date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
+    public boolean isDateArray;
     public boolean isUuid;
     public boolean isUri;
     public boolean isEmail;
@@ -654,6 +655,7 @@ public class CodegenProperty implements Cloneable, IJsonSchemaValidationProperti
         sb.append(", isBoolean=").append(isBoolean);
         sb.append(", isDate=").append(isDate);
         sb.append(", isDateTime=").append(isDateTime);
+        sb.append(", isDateArray=").append(isDateArray);
         sb.append(", isUuid=").append(isUuid);
         sb.append(", isUri=").append(isUri);
         sb.append(", isEmail=").append(isEmail);
@@ -721,6 +723,7 @@ public class CodegenProperty implements Cloneable, IJsonSchemaValidationProperti
                 isBoolean == that.isBoolean &&
                 isDate == that.isDate &&
                 isDateTime == that.isDateTime &&
+                isDateArray == that.isDateArray &&
                 isUuid == that.isUuid &&
                 isUri == that.isUri &&
                 isEmail == that.isEmail &&
@@ -790,7 +793,7 @@ public class CodegenProperty implements Cloneable, IJsonSchemaValidationProperti
                 exclusiveMinimum, exclusiveMaximum, hasMore, required, deprecated, secondaryParam,
                 hasMoreNonReadOnly, isPrimitiveType, isModel, isContainer, isString, isNumeric,
                 isInteger, isLong, isNumber, isFloat, isDouble, isByteArray, isBinary, isFile,
-                isBoolean, isDate, isDateTime, isUuid, isUri, isEmail, isFreeFormObject,
+                isBoolean, isDate, isDateTime, isDateArray, isUuid, isUri, isEmail, isFreeFormObject,
                 isListContainer, isMapContainer, isEnum, isReadOnly, isWriteOnly, isNullable,
                 isSelfReference, isCircularReference, isDiscriminator, _enum, allowableValues, items, mostInnerItems,
                 vendorExtensions, hasValidation, isInherited, discriminatorValue, nameInCamelCase,
