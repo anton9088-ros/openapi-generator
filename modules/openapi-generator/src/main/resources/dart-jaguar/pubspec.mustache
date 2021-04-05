@@ -1,5 +1,6 @@
 name: {{pubName}}
 version: {{pubVersion}}
+publish_to: none
 description: {{pubDescription}}
 environment:
   sdk: ">=2.0.0 <3.0.0"
@@ -8,7 +9,7 @@ dependencies:
     git:
       url: git://github.com/anton9088-ros/client.git
       path: retrofit
-      ref: dio
+      ref: dio-4
 {{#jsonFormat}}
   jaguar_serializer: ^2.2.12
 {{/jsonFormat}}
@@ -22,12 +23,12 @@ dev_dependencies:
     git:
       url: git://github.com/anton9088-ros/client.git
       path: retrofit_gen
-      ref: dio
+      ref: dio-4
 {{#jsonFormat}}
   jaguar_serializer_cli:
     git:
       url: git://github.com/anton9088-ros/jaguar_serializer.git
       path: serializer_cli
-      ref: fixes
+      ref: fixes-2
 {{/jsonFormat}}
   build_runner: ^1.6.5
